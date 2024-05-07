@@ -1,2 +1,6 @@
-# labproj
-data lab project
+#include <iostream> 
+#include <string> 
+using namespace std; 
+ int main(){
+ cout << "hello world. " <<endl; 
+ }
