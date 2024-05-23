@@ -196,7 +196,7 @@ int main() {
     cout<<"Hello user, Choose what type of clock do you want: "<<endl;
     
     do{
-        cout<<"You have two choices \n 1) Numerical clock \n 2) Roman clock \nEnter 1 or 2 to choose :"<<endl;
+        cout<<"You have two choices \n 1) Numerical clock \n 2) Romanian clock \nEnter 1 or 2 to choose :"<<endl;
         cin>>choice;
         
         if(choice==1 || choice ==2 )
