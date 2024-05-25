@@ -1,5 +1,4 @@
-
-// bool Clock::checkClock() {
+ bool Clock::checkClock() {
     if (!head) return false;
     node *current = head;
     int count = 1;
