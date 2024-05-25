@@ -172,6 +172,8 @@ string Clock::getTimeRoman(){
    
     
     time= hour + " : " + min + " " + meridiem;
+    cout<<"The hours hand is pointing at "<<hourH->data<<endl;
+    cout<<"The minutes hand is pointing at "<<minH->data<<endl;
     return time;
 }
 
@@ -395,6 +397,7 @@ int main() {
     bool type; // parameters to createClock
     int hour,min;
     string meridiem; //parameters for setTime
+    string time;
    
     
     cout<<"Hello user, Choose what type of clock do you want: "<<endl;
@@ -411,8 +414,8 @@ int main() {
         type = false;
         
     myclock.createClock(type);
-    
-    cout<<"Initial clock time: "<<myclock.getTime()<<endl;
+    time=myclock.getTime();
+    cout<<"Initial clock time: "<<time<<endl;
     
     cout<<"..................................................................................."<<endl;
     
@@ -432,7 +435,8 @@ int main() {
     
     cout<<"..................................................................................."<<endl;
     
-    cout<<"Time after setting is "<<myclock.getTime()<<endl;
+    time=myclock.getTime();
+    cout<<"Time after setting is "<<time<<endl;
     
     cout<<"..................................................................................."<<endl;
     
@@ -459,11 +463,16 @@ int main() {
     }
    
     myclock.moveTime(hour,min,type);
+    time=myclock.getTime();
+    cout<<"Time after moving is "<<time<<endl;
     
-    cout<<"Time after moving is "<<myclock.getTime()<<endl;
    
     return 0;
 }
+
+
+
+
 
 
 
