@@ -31,6 +31,10 @@ class Clock {
     string meridiem;
     string getTimeNumerical();
     string getTimeRoman();
+    void NumClockwise(int hour,int min);
+    void NumCounterClockwise(int hour,int min);
+    void RomClockwise(int hour,int min);
+    void RomCounterClockwise(int hour,int min);
     
 public:
     
@@ -39,8 +43,8 @@ public:
     bool checkClock();//to check clock sequence
     void correctClock();//if checkClock is false we correct the clock sequence
     string getTime();//returns time (if in numbers then display the minutes with 0,5,10,15..)
-    void setTime(string hour,string min);//set time to hour and min
-    void moveTime(string hour,string min);//move time n hours and n minutes
+    bool setTime(int hour,int min,string mer);//set time to hour and min
+    void moveTime(int hour,int min,bool clockwise);//move time n hours and n minutes
     ~Clock();//delete clock
     
 };
@@ -89,12 +93,12 @@ void Clock::createClock(bool type){
         
     }//end for
     
-    minH=head;  // initialize to zero
-    hourH=head; // initialize to zero
-    meridiem="AM"; //initialize to AM
+    minH=head;  // initialize
+    hourH=head; // initialize
+    meridiem="AM"; //initialize
 }
 Clock::~Clock(){
-    if (!head) return;  // If the list is empty, nothing to delete
+    if (!head) return;  // If is empty, nothing to delete
 
     node* current = head;
     do {
@@ -107,139 +111,32 @@ Clock::~Clock(){
     hourH = nullptr;
     minH = nullptr;
 }
-/*
 string Clock::getTime(){
-    string time;
-    if(Type){
-        int min=stoi(minH->data);
-        switch (min) {
-            case 1:
-                min=5;
-                break;
-            case 2:
-                min=10;
-                break;
-            case 3:
-                min=15;
-                break;
-            case 4:
-                min=20;
-                break;
-            case 5:
-                min=25;
-                break;
-            case 6:
-                min=30;
-                break;
-            case 7:
-                min=35;
-                break;
-            case 8:
-                min=40;
-                break;
-            case 9:
-                min=45;
-                break;
-            case 10:
-                min=50;
-                break;
-            case 11:
-                min=55;
-                break;
-            default:
-                min=0;
-                break;
-        }
-        time = hourH->data + " : " + (min < 10 ? "0" : "") + to_string(min) + " " + meridiem; // return time in format 00:00
-        
-    }
-    else{
-            string min=minH->data;
-            string hour=hourH->data;
-            
-            if (min == "I")    min="05";
-            if (min == "II")   min="10";
-            if (min == "III")  min="15";
-            if (min == "IV")   min="20";
-            if (min == "V")    min="25";
-            if (min == "VI")   min="30";
-            if (min == "VII")  min="35";
-            if (min == "VIII") min="40";
-            if (min == "IX")   min="45";
-            if (min == "X")    min="50";
-            if (min == "XI")   min="55";
-            if (min == "XII")  min="00";
-            
-            if (hour == "I")    hour="01";
-            if (hour == "II")   hour="02";
-            if (hour == "III")  hour="03";
-            if (hour == "IV")   hour="04";
-            if (hour == "V")    hour="05";
-            if (hour == "VI")   hour="06";
-            if (hour == "VII")  hour="07";
-            if (hour == "VIII") hour="08";
-            if (hour == "IX")   hour="09";
-            if (hour == "X")    hour="10";
-            if (hour == "XI")   hour="11";
-            if (hour == "XII")  hour="12";
-            
-        time= hour + " : " + min + " " + meridiem;
-    }
-    return time ;
-}
-*/
-string Clock::getTime(){
-    
-    if(Type)
+    if(Type) //check if the clock is in Numerical or Roman
         return getTimeNumerical();
     else
         return getTimeRoman();
 }
-string Clock::getTimeNumerical(){
+string Clock::getTimeNumerical() {
     string time;
-    string min = minH->data;
-    string hour = hourH->data;
 
-    if (min == "1")    min = "05";
-    if (min == "2")    min = "10";
-    if (min == "3")    min = "15";
-    if (min == "4")    min = "20";
-    if (min == "5")    min = "25";
-    if (min == "6")    min = "30";
-    if (min == "7")    min = "35";
-    if (min == "8")    min = "40";
-    if (min == "9")    min = "45";
-    if (min == "10")   min = "50";
-    if (min == "11")   min = "55";
-    if (min == "12")   min = "00"; // Represent zero minutes as "00"
+    // Convert the minute node data to integer and multiply by 5
+    int minInt = stoi(minH->data) * 5;
 
-        time = hour + " : " + min + " " + meridiem; // return time in format 00:00
+    // Special case: if minute data is "12", it should represent "00" minutes
+    if (minH->data == "12") {
+        minInt = 0;
+    }
+
+    // Format the minute and hour as a two-digit string
+    string min = (minInt < 10) ? "0" + to_string(minInt) : to_string(minInt);
+    string hour = (hourH->data.length() < 2) ? "0" + hourH->data : hourH->data;
+    
+    // Construct the time string in the format "00:00 AM/PM"
+    time = hour + " : " + min + " " + meridiem;
+
     return time;
 }
-/*
-string Clock::getTimeRoman(){
-    string time;
-    string min=minH->data;
-    string hour=hourH->data;
-    
-    if (min == "I")    min="V";
-    if (min == "II")   min="X";
-    if (min == "III")  min="XV";
-    if (min == "IV")   min="XX";
-    if (min == "V")    min="XXV";
-    if (min == "VI")   min="XXX";
-    if (min == "VII")  min="XXXV";
-    if (min == "VIII") min="XL";
-    if (min == "IX")   min="XLV";
-    if (min == "X")    min="L";
-    if (min == "XI")   min="LV";
-    if (min == "XII")  min="N";//there's no representation for zero in numerical!!
-   
-    
-    time= hour + " : " + min + " " + meridiem;
-    return time;
-}
-*/
 string Clock::getTimeRoman(){
     string time;
     string min=minH->data;
@@ -275,92 +172,161 @@ string Clock::getTimeRoman(){
     time= hour + " : " + min + " " + meridiem;
     return time;
 }
-void Clock::setTime(string hour, string min) {
-    // Convert hour and minute strings to integers
-    int hourInt = stoi(hour);
-    int minInt = stoi(min);
+
+bool Clock::setTime(int hour, int min, string mer) {
+    if (head == nullptr) { // Check if the clock is initialized
+        cout << "Clock is not initialized." << endl;
+        return false;
+    }
 
     // Check if the provided hour is within range (1-12)
-    if (hourInt < 1 || hourInt > 12) {
+    if (hour < 1 || hour > 12) {
         cout << "Invalid input. Please provide a valid hour (1-12)." << endl;
-        return;
+        return false;
     }
 
     // Check if the provided minute is within range (multiples of 5, 0-55)
-    if (minInt % 5 != 0 || minInt < 0 || minInt > 55) {
+    if (min % 5 != 0 || min < 0 || min > 55) {
         cout << "Invalid input. Please provide a valid minute (multiples of 5, 0-55)." << endl;
-        return;
+        return false;
+    }
+
+    // Check if the meridiem is valid
+    if (mer != "AM" && mer != "PM") {
+        cout << "Invalid input. Please provide a valid meridiem (AM or PM)." << endl;
+        return false;
     }
 
     // Find the node corresponding to the provided hour
     node* hourNode = head;
-    for (int i = 0; i < hourInt; ++i) {
+    for (int i = 0; i < hour; i++) {
         hourNode = hourNode->next;
     }
 
     // Find the node corresponding to the provided minute
     node* minNode = head;
-    int minIndex = minInt / 5;
-    for (int i = 0; i < minIndex; ++i) {
+    int minIndex = min / 5; // Convert to the minutes value on clock
+    for (int i = 0; i < minIndex; i++) {
         minNode = minNode->next;
     }
 
     // Update the hour and minute pointers
     hourH = hourNode;
     minH = minNode;
+    meridiem = mer;
+    return true;
 }
-
-void Clock::moveTime(string hour, string min) {
-    // Ensure valid hour input
-    if (hour.size() != 2 || min.size() != 2) {
-        cout << "Invalid input. Please provide a valid hour and minute." << endl;
-        return;
+void Clock::moveTime(int hour, int min,bool clockwise){
+    if(clockwise)
+    {
+        if(Type)
+            NumClockwise(hour,min);
+        else
+            RomClockwise(hour, min);
     }
-
-    // Check if the provided hour and minute are within range
-    int hourInt = (hour[0] - '0') * 10 + (hour[1] - '0');
-    int minInt = (min[0] - '0') * 10 + (min[1] - '0');
-    if (hourInt < 1 || hourInt > 12 || minInt < 0 || minInt > 59) {
-        cout << "Invalid input. Please provide a valid hour (1-12) and minute (0-59)." << endl;
-        return;
+    else{
+        if(Type)
+            NumCounterClockwise(hour,min);
+        else
+            RomCounterClockwise(hour, min);
     }
-
-    // Find the node corresponding to the provided hour
-    node* hourNode = head;
-    for (int i = 0; i < hourInt; ++i) {
-        hourNode = hourNode->next;
-    }
-
-    // Find the node corresponding to the provided minute (in 5-minute intervals)
-    node* minNode = head;
-    int minIndex = minInt / 5;
-    for (int i = 0; i < minIndex; ++i) {
-        minNode = minNode->next;
-    }
-
-    // Update the hour and minute pointers
-    hourH = hourNode;
-    minH = minNode;
 }
+void Clock::NumClockwise(int hour, int min){
+    if(min != 0){
+        int remMinToCompleteHour = 60 - (stoi(minH->data) * 5); // how many minutes are remaining to complete an hour
+        
+        if (remMinToCompleteHour <= min) // check if the minutes to move is greter than or equal to remMinToCompleteHour
+            hourH = hourH->next; // move one hour
+        
+        if(hourH->data=="12")
+            meridiem= (meridiem == "AM") ? "PM" : "AM"; // if we hit 12 o'clock change AM or PM
+        
+        min=min/5; // convert the minutes to loop times
+        
+        // move the minutes hand
+        for (int i = 0; i < min; i++) {
+            minH = minH->next;
+        }
+    }
+    //if the hours to move is zero there is nothing to do to the hours hand
+    if(hour != 0){
+        
+        if (hourH->data!="12") {
+            
+            int remHourtoMidnight = 12 - stoi(hourH->data);
+            
+            if (remHourtoMidnight < hour)
+                meridiem= (meridiem == "AM") ? "PM" : "AM";
+        }
+        
+        for (int i = 0; i < hour; i++) {
+            hourH = hourH->next;
+        }
+        
+    }
+}
+void Clock::NumCounterClockwise(int hour, int min){
+    if (min != 0) {
+                int remMinToCompleteHour = stoi(minH->data) * 5;
 
-//main
+                if (remMinToCompleteHour >= min)
+                    hourH = hourH->prev;
+
+                if (hourH->data == "12")
+                    meridiem = (meridiem == "AM") ? "PM" : "AM";
+
+                min = min / 5;
+
+                for (int i = 0; i < min; i++) {
+                    minH = minH->prev;
+                }
+    }
+    if (hour != 0) {
+
+                if (hourH->data != "12") {
+
+                    int remHourtoMidnight = stoi(hourH->data);
+
+                    if (remHourtoMidnight < hour)
+                        meridiem = (meridiem == "AM") ? "PM" : "AM";
+                }
+                else
+                {
+                    if(hour==12)
+                        meridiem = (meridiem == "AM") ? "PM" : "AM";
+                }
+
+                for (int i = 0; i < hour; i++) {
+                    hourH = hourH->prev;
+                }
+    }
+
+}
+void Clock::RomClockwise(int hour, int min){
+    
+}
+void Clock::RomCounterClockwise(int hour, int min){
+    
+}
 #include <iostream>
+#include <string>
 #include "Clock.hpp"
 using namespace std;
 int main() {
+    
     Clock myclock;
-    int choice;
-    bool type;
-    string hour, min;
+    
+    int choice; //to let the user choose the type of clock (Numerical or Roman)
+    bool type; // parameters to createClock
+    int hour,min;
+    string meridiem; //parameters for setTime
+   
     
     cout<<"Hello user, Choose what type of clock do you want: "<<endl;
     
     do{
         cout<<"You have two choices \n 1) Numerical clock \n 2) Romanian clock \nEnter 1 or 2 to choose :"<<endl;
         cin>>choice;
-        
-        if(choice==1 || choice ==2 )
-            break;
         
     }while(choice!=1 && choice!=2);
     
@@ -370,24 +336,58 @@ int main() {
         type = false;
         
     myclock.createClock(type);
-
+    
+    cout<<"Initial clock time: "<<myclock.getTime()<<endl;
+    
+    cout<<"..................................................................................."<<endl;
+    
+    cout<<"To set the time\n1)Enter the hour (1-12)\n2)Enter the minutes (multiples of 5 from (0-55))\n3)Enter the meridiem (AM or PM)"<<endl;
+    
+    cin>>hour;
+    cin>>min;
+    cin>>meridiem;
+    
+    //keep calling the function until the parameters are right
+    while (!myclock.setTime(hour, min, meridiem))
+    {
+        cin>>hour;
+        cin>>min;
+        cin>>meridiem;
+    }
+    
+    cout<<"..................................................................................."<<endl;
+    
+    cout<<"Time after setting is "<<myclock.getTime()<<endl;
+    
+    cout<<"..................................................................................."<<endl;
+    
+    cout<<"To move the time:"<<endl;
+    do{
+        cout<<"Choose the direction of movement\n1)Clockwise\n2)Counter Clockwise\nEnter 1 or 2 to choose :"<<endl;
+        cin>>choice;
+    }while(choice!=1 && choice!=2);
+    
+    if(choice == 1)
+        type = true;
+    else
+        type = false;
+    
+    cout<<"Enter the amount of hours you want to move "<<endl;
+    cin>>hour;
+    
+    cout<<"Enter the amount of minutes you want to move (multiples of 5 from (0-55)) "<<endl;
+    cin>>min;
+    
+    while(!(min>=0 && min<=55 && min%5==0)){
+        cout<<"Invalid,Minutes should be multiples of 5 from (0-55) "<<endl;
+        cin>>min;
+    }
    
-    cout << "Enter the hour (1-12): ";
-    cin >> hour;
-    cout << "Enter the minute (0-59): ";
-    cin >> min;
-    cout << endl;
-    myclock.setTime(hour, min);
-
-    // Display the time
-    cout << "Current time: " << myclock.getTime() << endl;
-
-    cout << endl;
-    myclock.moveTime("03", "20");
-
-    // Display the updated time
-    cout << "Updated time: " << myclock.getTime() << endl;
-
+    myclock.moveTime(hour,min,type);
+    
+    cout<<"Time after moving is "<<myclock.getTime()<<endl;
    
     return 0;
 }
+
+
