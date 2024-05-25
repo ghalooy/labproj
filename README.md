@@ -29,6 +29,8 @@ class Clock {
     node *hourH;
     bool Type;
     string meridiem;
+    string roman(string num);//converts from number to roman
+    string number(string rom);//converts from roman to number
     string getTimeNumerical();
     string getTimeRoman();
     void NumClockwise(int hour,int min);
@@ -302,6 +304,31 @@ void Clock::NumCounterClockwise(int hour, int min){
     }
 
 }
+string Clock::roman(string num){
+    string numeric[]={"12","1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"};
+    string roman[]={"XII","I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI"};
+    string rom;
+    for(int i=0;i<12;i++){
+        if (num==numeric[i]) {
+            rom = roman[i];
+        }
+    }
+    return rom;
+}
+string number(string rom){
+    {
+        string numeric[]={"12","1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"};
+        string roman[]={"XII","I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI"};
+        string num;
+        for(int i=0;i<12;i++){
+            if (rom==roman[i]) {
+                num = numeric[i];
+            }
+        }
+        return num;
+    }
+}
+
 void Clock::RomClockwise(int hour, int min){
     
 }
