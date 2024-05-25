@@ -276,17 +276,19 @@ string Clock::getTimeRoman(){
     return time;
 }
 void Clock::setTime(string hour, string min) {
-    // Ensure valid hour input
-    if (hour.size() != 2 || min.size() != 2) {
-        cout << "Invalid input. Please provide a valid hour and minute." << endl;
+    // Convert hour and minute strings to integers
+    int hourInt = stoi(hour);
+    int minInt = stoi(min);
+
+    // Check if the provided hour is within range (1-12)
+    if (hourInt < 1 || hourInt > 12) {
+        cout << "Invalid input. Please provide a valid hour (1-12)." << endl;
         return;
     }
 
-    // Check if the provided hour and minute are within range
-    int hourInt = (hour[0] - '0') * 10 + (hour[1] - '0');
-    int minInt = (min[0] - '0') * 10 + (min[1] - '0');
-    if (hourInt < 1 || hourInt > 12 || minInt < 0 || minInt > 59) {
-        cout << "Invalid input. Please provide a valid hour (1-12) and minute (0-59)." << endl;
+    // Check if the provided minute is within range (multiples of 5, 0-55)
+    if (minInt % 5 != 0 || minInt < 0 || minInt > 55) {
+        cout << "Invalid input. Please provide a valid minute (multiples of 5, 0-55)." << endl;
         return;
     }
 
@@ -296,7 +298,7 @@ void Clock::setTime(string hour, string min) {
         hourNode = hourNode->next;
     }
 
-    // Find the node corresponding to the provided minute (in 5-minute intervals)
+    // Find the node corresponding to the provided minute
     node* minNode = head;
     int minIndex = minInt / 5;
     for (int i = 0; i < minIndex; ++i) {
@@ -307,6 +309,7 @@ void Clock::setTime(string hour, string min) {
     hourH = hourNode;
     minH = minNode;
 }
+
 void Clock::moveTime(string hour, string min) {
     // Ensure valid hour input
     if (hour.size() != 2 || min.size() != 2) {
