@@ -29,8 +29,7 @@ class Clock {
     node *hourH;
     bool Type;
     string meridiem;
-    string roman(string num);//converts from number to roman
-    string number(string rom);//converts from roman to number
+    int number(string rom);//converts from roman to number
     string getTimeNumerical();
     string getTimeRoman();
     void NumClockwise(int hour,int min);
@@ -52,6 +51,8 @@ public:
 };
 
 #endif /* Clock_hpp */
+
+
 #include "Clock.hpp"
 #include <iostream>
 #include <string>
@@ -304,22 +305,11 @@ void Clock::NumCounterClockwise(int hour, int min){
     }
 
 }
-string Clock::roman(string num){
-    string numeric[]={"12","1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"};
-    string roman[]={"XII","I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI"};
-    string rom;
-    for(int i=0;i<12;i++){
-        if (num==numeric[i]) {
-            rom = roman[i];
-        }
-    }
-    return rom;
-}
-string number(string rom){
+int Clock::number(string rom){
     {
-        string numeric[]={"12","1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"};
+        int numeric[]={12,1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
         string roman[]={"XII","I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI"};
-        string num;
+        int num=-1;
         for(int i=0;i<12;i++){
             if (rom==roman[i]) {
                 num = numeric[i];
@@ -328,13 +318,73 @@ string number(string rom){
         return num;
     }
 }
+void Clock::RomClockwise(int hour, int min) {
+    if (min != 0) {
+        int remMinToCompleteHour = 60 - (number(minH->data) * 5); // how many minutes are remaining to complete an hour
 
-void Clock::RomClockwise(int hour, int min){
-    
+        if (remMinToCompleteHour <= min) // check if the minutes to move is greater than or equal to remMinToCompleteHour
+            hourH = hourH->next; // move one hour
+
+        if (hourH->data == "XII")
+            meridiem = (meridiem == "AM") ? "PM" : "AM"; // if we hit 12 o'clock change AM or PM
+
+        min = min / 5; // convert the minutes to loop times
+
+        // move the minutes hand
+        for (int i = 0; i < min; i++) {
+            minH = minH->next;
+        }
+    }
+    //if the hours to move is zero there is nothing to do to the hours hand
+    if (hour != 0) {
+        if (hourH->data != "XII") {
+            int remHourtoMidnight = 12 - number(hourH->data);
+
+            if (remHourtoMidnight < hour)
+                meridiem = (meridiem == "AM") ? "PM" : "AM";
+        }
+
+        for (int i = 0; i < hour; i++) {
+            hourH = hourH->next;
+        }
+    }
 }
-void Clock::RomCounterClockwise(int hour, int min){
-    
+void Clock::RomCounterClockwise(int hour, int min) {
+    if (min != 0) {
+        int remMinToCompleteHour = number(minH->data) * 5;
+
+        if (remMinToCompleteHour >= min)
+            hourH = hourH->prev;
+
+        if (hourH->data == "XII")
+            meridiem = (meridiem == "AM") ? "PM" : "AM";
+
+        min = min / 5;
+
+        for (int i = 0; i < min; i++) {
+            minH = minH->prev;
+        }
+    }
+
+    if (hour != 0) {
+        if (hourH->data != "XII") {
+            int remHourtoMidnight = number(hourH->data);
+
+            if (remHourtoMidnight < hour)
+                meridiem = (meridiem == "AM") ? "PM" : "AM";
+        }
+        else {
+            if (hour == 12)
+                meridiem = (meridiem == "AM") ? "PM" : "AM";
+        }
+
+        for (int i = 0; i < hour; i++) {
+            hourH = hourH->prev;
+        }
+    }
+
 }
+
 #include <iostream>
 #include <string>
 #include "Clock.hpp"
@@ -416,5 +466,9 @@ int main() {
    
     return 0;
 }
+
+
+
+
 
 
