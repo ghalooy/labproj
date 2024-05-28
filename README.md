@@ -144,31 +144,25 @@ string Clock::getTimeRoman(){
     string min=minH->data;
     string hour=hourH->data;
     
-    if (min == "I")    min="05";
-    if (min == "II")   min="10";
-    if (min == "III")  min="15";
-    if (min == "IV")   min="20";
-    if (min == "V")    min="25";
-    if (min == "VI")   min="30";
-    if (min == "VII")  min="35";
-    if (min == "VIII") min="40";
-    if (min == "IX")   min="45";
-    if (min == "X")    min="50";
-    if (min == "XI")   min="55";
-    if (min == "XII")  min="00";
-    
-    if (hour == "I")    hour="01";
-    if (hour == "II")   hour="02";
-    if (hour == "III")  hour="03";
-    if (hour == "IV")   hour="04";
-    if (hour == "V")    hour="05";
-    if (hour == "VI")   hour="06";
-    if (hour == "VII")  hour="07";
-    if (hour == "VIII") hour="08";
-    if (hour == "IX")   hour="09";
-    if (hour == "X")    hour="10";
-    if (hour == "XI")   hour="11";
-    if (hour == "XII")  hour="12";
+    int numeric[] = {12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+    string roman[] = {"XII", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI"};
+
+        // Convert minute hand from Roman to Numeric
+        for (int i = 0; i < 12; i++) {
+            if (min == roman[i]) {
+                int minNumeric = numeric[i] * 5;
+                min = (minNumeric == 60) ? "00" : (minNumeric < 10 ? "0" + to_string(minNumeric) : to_string(minNumeric));
+                break;
+            }
+        }
+
+        // Convert hour hand from Roman to Numeric
+        for (int i = 0; i < 12; i++) {
+            if (hour == roman[i]) {
+                hour = (numeric[i] < 10 ? "0" + to_string(numeric[i]) : to_string(numeric[i]));
+                break;
+            }
+        }
    
     
     time= hour + " : " + min + " " + meridiem;
